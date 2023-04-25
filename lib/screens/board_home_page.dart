@@ -10,39 +10,43 @@ class BoardHomePage extends StatefulWidget {
 }
 
 class _BoardHomePageState extends State<BoardHomePage> {
-  List<String> posts = [];
+  int _selectedIndex = 0;
 
-  void _addPost() async {
-    final result = await Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => NewPostPage()),
-    );
+  static List<Widget> _widgetOptions = [
+    Center(child: Text('Home Tab')),
+    Center(child: Text('Messages Tab')),
+    Center(child: Text('Settings Tab')),
+  ];
 
-    if (result != null && result is String) {
-      setState(() {
-        posts.add(result);
-      });
-    }
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: ListView.builder(
-        itemCount: posts.length,
-        itemBuilder: (BuildContext context, int index) {
-          return ListTile(
-            title: Text(posts[index]),
-          );
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _addPost,
-        tooltip: 'Add Post',
-        child: Icon(Icons.add),
+      // AppBar를 제거합니다.
+      body: _widgetOptions.elementAt(_selectedIndex),
+      bottomNavigationBar: BottomNavigationBar(
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.message),
+            label: 'Messages',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'Settings',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Theme.of(context).primaryColor,
+        onTap: _onItemTapped,
       ),
     );
   }
